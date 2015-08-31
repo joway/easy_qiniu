@@ -10,7 +10,15 @@
 - requests
 
 
+
 ##Usage
+
+- **upload_all_files_to_qiniu.py**
+
+	-    指定access_key、secret_key、bucket_name和director_path(本地文件夹）即可把所有文件上传至对应七牛仓库。(默认文件夹为当前目录)
+
+
+##easy_qiniu.py API
 
 ### 使用access_key,secret_key登陆七牛，得到Auth类型返回值，以它作为后续操作凭证
 
@@ -86,9 +94,3 @@
 
 	list_file_names(session,bucket_name, prefix=None, marker=None, limit=None, delimiter=None):
 
-
-##Extra
-
-- upload_all_files_to_qiniu.py
-
-	-    指定access_key、secret_key、bucket_name和director_path(本地文件夹）即可把所有文件上传至对应七牛仓库。(默认文件夹为当前目录)
