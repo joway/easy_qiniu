@@ -1,14 +1,13 @@
 # easy_qiniu
 
-
-
 基于七牛官方API封装成一些简单的函数，便于日常调用。
 
 ##Requirements
 
-- requests
-- qiniu
 - Python 3
+- qiniu
+	- pip install qiniu
+- requests
 
 
 ##Usage
@@ -86,3 +85,10 @@
 	    """
 
 	list_file_names(session,bucket_name, prefix=None, marker=None, limit=None, delimiter=None):
+
+
+##Extra
+
+- upload_all_files_to_qiniu.py
+
+	-    指定access_key、secret_key、bucket_name和director_path(本地文件夹）即可把所有文件上传至对应七牛仓库。(默认文件夹为当前目录)

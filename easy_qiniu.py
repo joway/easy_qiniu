@@ -7,16 +7,19 @@ from qiniu import build_batch_move
 from qiniu import build_batch_delete
 
 import requests
+import mimetypes
 
 
 #使用access_key,secret_key登陆七牛，得到Auth类型返回值，以它作为后续操作凭证
 def login_qiniu(access_key,secret_key):
     return Auth(access_key, secret_key)
 
+def get_mimetype(filename):
+    return mimetypes.guess_type(filename)[0]
 
 # 上传本地文件(断点续上传、分块并行上传)
 def upload_files(session,bucket_name='',files={},
-                 mime_type = "text/plain",params = {'x:a': 'a'}
+                 mime_type='',params = {'x:a': 'a'}
 ):
     """Args:
     session: Auth
@@ -30,7 +33,10 @@ def upload_files(session,bucket_name='',files={},
         #上传策略仅指定空间名和上传后的文件名，其他参数为默认值
         token = session.upload_token(bucket_name, key)
         progress_handler = lambda progress, total: progress
-        ret,info= put_file(token, key, files[key], params ,mime_type=mime_type, progress_handler=progress_handler)
+        if(mime_type==''):
+            ret,info= put_file(token, key, files[key], params ,mime_type=get_mimetype(key), progress_handler=progress_handler)
+        else:
+            ret,info= put_file(token, key, files[key], params ,mime_type=mime_type, progress_handler=progress_handler)
         assert ret['key'] == key
 
 
@@ -57,8 +63,9 @@ def get_file_info(session,bucket_name,keys=[]):
     bucket = BucketManager(session)
     ops = build_batch_stat(bucket_name, keys)
     ret, info = bucket.batch(ops)
-    for i in ret:
-        assert i['code'] == 200
+    if(ret!=None):
+        for i in ret:
+            assert i['code'] == 200
     return info
 
 # 复制文件
@@ -83,8 +90,9 @@ def move_files(session,source_bucket,target_bucket,pathdict={}):
     bucket = BucketManager(session)
     ops = build_batch_move(source_bucket, pathdict, target_bucket)
     ret, info = bucket.batch(ops)
-    for i in ret:
-        assert i['code'] == 200
+    if(ret!=None):
+        for i in ret:
+            assert i['code'] == 200
     return info
 
 
@@ -96,8 +104,9 @@ def delete_files(session,source_bucket,pathlist=[]):
     bucket = BucketManager(session)
     ops = build_batch_delete(source_bucket, pathlist)
     ret, info = bucket.batch(ops)
-    for i in ret:
-        assert i['code'] == 200
+    if(ret!=None):
+        for i in ret:
+            assert i['code'] == 200
     return info
 
 # 列出所有文件
