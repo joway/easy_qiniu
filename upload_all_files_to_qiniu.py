@@ -39,9 +39,9 @@ def upload_into_qiniu(access_key,secret_key,bucket_name,director_path=sys.path[0
     else:
         return True
 
-access_key = 'xxx'
-secret_key = 'xxx'
-bucket_name = 'xxx'
+access_key = 'M4uDxjD_Nxm38V1s_eTl2MeMNY0D0XwNIb7eLwln'
+secret_key = 'PE1B4vcQ3fgvJsMkYBt_XHfj5F1efgcBNgGMr5IV'
+bucket_name = 'test'
 if(upload_into_qiniu(access_key,secret_key,bucket_name)):
     print('Successful')
 else:
