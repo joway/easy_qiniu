@@ -1,6 +1,6 @@
 # easy_qiniu
 
-基于七牛官方API封装成一些简单的函数，便于日常调用。
+基于七牛官方API封装成 SevenCow 类，便于日常调用。
 
 ##Requirements
 
@@ -8,89 +8,63 @@
 - qiniu
 	- pip install qiniu
 - requests
+	- pip install requests 
 
 
 
 ##Usage
 
-- **upload_all_files_to_qiniu.py**
+###1. upload_all_files_to_qiniu.py
 
-	-    指定access_key、secret_key、bucket_name和director_path(本地文件夹）即可把所有文件上传至对应七牛仓库。(默认文件夹为当前目录)
+- 在文件中修改 access_key、secret_key、bucket_name和director_path(本地文件夹(不设置默认为当前文件夹)）即可把所有文件上传至对应七牛仓库。
 
 
-##easy_qiniu.py API
 
-### 使用access_key,secret_key登陆七牛，得到Auth类型返回值，以它作为后续操作凭证
 
-	login_qiniu(access_key,secret_key)
+### 2. easy_qiniu.py ：SevenCow 类
 
-### 上传本地文件(断点续上传、分块并行上传)
-    """Args:
-    session: Auth
-    bucket_name:'bucket_name'
-    files: {'key':'localfile',...}
-    mime_type: mime_type
-    params: eg {'x:a': 'a'}
-    """
+	#登陆
+	sc = SevenCow(access_key,secret_key)
+	
+	#上传
+	sc.upload_files(bucket_name,filedict)
+	
+	#下载
+	sc.download_files(bucket_url,filedict)
+	
+	#获取文件信息
+	sc.get_file_info(bucket_name,filelist)
 
-	upload_files(session,bucket_name='',files={},
-	                 mime_type = "text/plain",params = {'x:a': 'a'}
-	):
+	
+	#复制
+	sc.copy_files(source_bucket,target_bucket,pathdict)
+	
+	#移动
+	sc.move_files(source_bucket,target_bucket,pathdict)
+	
+	#删除
+	sc.delete_files(bucket_name,filelist)
+	
+	#列出
+	sc.list_file_names(bucket_name)
+	
+	#获取网络文件至七牛
+	sc.fetch_files_from_net_to_qiniu(bucket_name,net_pathdict)
+	
+	#更新镜像
+	sc.update_image_source(bucket_name,pathlist)
 
-### 下载文件
 
-    """Args:
-    url: url
-    files: {'key':'localfile',...}
-    """
-
-	download_files(url='',files={}):
-
-### 获取文件信息
-    """Args:
-    keys:  ['fileName1','fileName2']
-    """
-
-	get_file_info(session,bucket_name,keys=[]):
-
-### 复制文件
-
-    """Args:
-    pathdict: {'source_file_name':'target_file_name',...}
-    """
-
-	copy_files(session,source_bucket,target_bucket,pathdict={}):
-
-### 移动文件
-
-    """Args:
-    pathdict: {'source_file_name':'target_file_name',...}
-    """
-
-	move_files(session,source_bucket,target_bucket,pathdict={}):
-
-### 删除文件
-
-    """Args:
-    pathlist: ['source_file_name',...]
-    """
-
-	delete_files(session,source_bucket,pathlist=[]):
-
-### 列出所有文件
-
-	    """
-	    Args:
-	        session：   session
-	        bucket:     空间名
-	        prefix:     列举前缀
-	        marker:     列举标识符(首次为None)
-	        limit:      单次列举个数限制(默认列举全部)
-	        delimiter:  指定目录分隔符
-	            
-	    Returns:
-	        pathlist: ['file_name',...]
-	    """
-
-	list_file_names(session,bucket_name, prefix=None, marker=None, limit=None, delimiter=None):
-
+	#参数样例:
+	
+	access_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+	secret_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+	bucket_name = 'test'
+	bucket_url = '7xlgp1.com1.z0.glb.clouddn.com'
+	filedict = {'1.jpg':'D://1.jpg'}
+	filelist = ['1.jpg']
+	source_bucket = 'images'
+	target_bucket = 'test'
+	pathdict = {'1.jpg':'path.jpg'}
+	pathlist = ['1.jpg']
+	net_pathdict = {'00000.jpg':'http://ww4.sinaimg.cn/bmiddle/708485bfgw1evlyks7y41j20ic5607wh.jpg'}

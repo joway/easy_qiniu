@@ -1,6 +1,6 @@
 ﻿import os
 import sys
-from easy_qiniu import *
+from easy_qiniu import SevenCow
 
 #可获取文件夹内全部文件名(包括子文件夹)
 def get_all_files(DirectoryPath):
@@ -31,18 +31,18 @@ def get_filenames_dict(filenamesList=[]):
 #上传，根据返回值判断是否成功
 def upload_into_qiniu(access_key,secret_key,bucket_name,director_path=sys.path[0]):
     try:
-        session = login_qiniu(access_key,secret_key)
-        delete_files(session,bucket_name,list_file_names(session,bucket_name))
-        upload_files(session,bucket_name,get_filenames_dict(get_all_files(director_path)))
+        sc = SevenCow(access_key,secret_key)
+        sc.delete_files(bucket_name,sc.list_file_names(bucket_name)[0])
+        sc.upload_files(bucket_name,get_filenames_dict(get_all_files(director_path)))
     except:
         return False
     else:
         return True
 
-access_key = 'M4uDxjD_Nxm38V1s_eTl2MeMNY0D0XwNIb7eLwln'
-secret_key = 'PE1B4vcQ3fgvJsMkYBt_XHfj5F1efgcBNgGMr5IV'
-bucket_name = 'test'
+access_key = ''
+secret_key = ''
+bucket_name = 'conoha'
 if(upload_into_qiniu(access_key,secret_key,bucket_name)):
-    print('Successful')
+    print('Bak Successful')
 else:
-    print('Error')
+    print('Bak Error')
